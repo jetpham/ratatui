@@ -146,7 +146,6 @@ pub enum ScrollbarOrientation {
 /// If you don't have multi-line content, you can leave the `viewport_content_length` set to the
 /// default and it'll use the track size as a `viewport_content_length`.
 #[derive(Debug, Default, Clone, Copy, Eq, PartialEq, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct ScrollbarState {
     /// The total length of the scrollable content.
     content_length: usize,
@@ -172,7 +171,7 @@ pub enum ScrollDirection {
     Backward,
 }
 
-impl<'a> Default for Scrollbar<'a> {
+impl Default for Scrollbar<'_> {
     fn default() -> Self {
         Self::new(ScrollbarOrientation::default())
     }
@@ -496,7 +495,7 @@ impl ScrollbarState {
     }
 }
 
-impl<'a> StatefulWidget for Scrollbar<'a> {
+impl StatefulWidget for Scrollbar<'_> {
     type State = ScrollbarState;
 
     fn render(self, area: Rect, buf: &mut Buffer, state: &mut Self::State) {

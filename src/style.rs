@@ -101,7 +101,6 @@ bitflags! {
     ///
     /// let m = Modifier::BOLD | Modifier::ITALIC;
     /// ```
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
     #[derive(Default, Clone, Copy, Eq, PartialEq, Hash)]
     pub struct Modifier: u16 {
         const BOLD              = 0b0000_0000_0001;
@@ -243,7 +242,6 @@ impl fmt::Debug for Modifier {
 /// );
 /// ```
 #[derive(Default, Clone, Copy, Eq, PartialEq, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Style {
     pub fg: Option<Color>,
     pub bg: Option<Color>,
@@ -251,6 +249,7 @@ pub struct Style {
     pub underline_color: Option<Color>,
     pub add_modifier: Modifier,
     pub sub_modifier: Modifier,
+    pub hyperlink: Option<&'static str>,
 }
 
 /// A custom debug implementation that prints only the fields that are not the default, and unwraps
@@ -284,6 +283,7 @@ impl Style {
             underline_color: None,
             add_modifier: Modifier::empty(),
             sub_modifier: Modifier::empty(),
+            hyperlink: None,
         }
     }
 
@@ -296,6 +296,7 @@ impl Style {
             underline_color: Some(Color::Reset),
             add_modifier: Modifier::empty(),
             sub_modifier: Modifier::all(),
+            hyperlink: None,
         }
     }
 
@@ -330,6 +331,20 @@ impl Style {
     #[must_use = "`bg` returns the modified style without modifying the original"]
     pub const fn bg(mut self, color: Color) -> Self {
         self.bg = Some(color);
+        self
+    }
+
+    /// Sets the hyperlink for the style.
+    #[must_use = "`hyperlink` returns the modified style without modifying the original"]
+    pub const fn hyperlink(mut self, link: &'static str) -> Self {
+        self.hyperlink = Some(link);
+        self
+    }
+
+    /// Clears the hyperlink for the style.
+    #[must_use = "`clear_hyperlink` returns the modified style without modifying the original"]
+    pub const fn clear_hyperlink(mut self) -> Self {
+        self.hyperlink = None;
         self
     }
 
@@ -446,6 +461,8 @@ impl Style {
         self.sub_modifier.remove(other.add_modifier);
         self.sub_modifier.insert(other.sub_modifier);
 
+        self.hyperlink = other.hyperlink.or(self.hyperlink);
+
         self
     }
 
@@ -494,6 +511,10 @@ impl Style {
                 _ => f.write_fmt(format_args!(".remove_modifier(Modifier::{modifier:?})"))?,
             }
         }
+        if let Some(url) = self.hyperlink {
+            f.write_str(&format!("url: {url}"))?;
+        }
+
         Ok(())
     }
 }

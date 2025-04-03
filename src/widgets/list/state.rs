@@ -43,7 +43,6 @@
 ///
 /// [`List`]: crate::widgets::List
 #[derive(Debug, Default, Clone, Eq, PartialEq, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct ListState {
     pub(crate) offset: usize,
     pub(crate) selected: Option<usize>,

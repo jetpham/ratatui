@@ -66,7 +66,6 @@ use crate::{
 /// # }
 /// ```
 #[derive(Default, Clone, Eq, PartialEq, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Buffer {
     /// The area represented by this buffer
     pub area: Rect,

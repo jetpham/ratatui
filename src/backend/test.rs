@@ -32,7 +32,6 @@ use crate::{
 /// # std::io::Result::Ok(())
 /// ```
 #[derive(Debug, Clone, Eq, PartialEq, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct TestBackend {
     buffer: Buffer,
     scrollback: Buffer,

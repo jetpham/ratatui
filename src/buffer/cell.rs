@@ -4,7 +4,6 @@ use crate::style::{Color, Modifier, Style};
 
 /// A buffer cell
 #[derive(Debug, Clone, Eq, PartialEq, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Cell {
     /// The string to be drawn in the cell.
     ///
@@ -31,6 +30,9 @@ pub struct Cell {
 
     /// Whether the cell should be skipped when copying (diffing) the buffer to the screen.
     pub skip: bool,
+
+    /// The hyperlink that the cell points to
+    pub hyperlink: Option<&'static str>,
 }
 
 impl Cell {
@@ -52,6 +54,7 @@ impl Cell {
             underline_color: Color::Reset,
             modifier: Modifier::empty(),
             skip: false,
+            hyperlink: None,
         }
     }
 
@@ -112,6 +115,7 @@ impl Cell {
         }
         self.modifier.insert(style.add_modifier);
         self.modifier.remove(style.sub_modifier);
+        self.hyperlink = style.hyperlink;
         self
     }
 
@@ -125,6 +129,7 @@ impl Cell {
             underline_color: Some(self.underline_color),
             add_modifier: self.modifier,
             sub_modifier: Modifier::empty(),
+            hyperlink: self.hyperlink,
         }
     }
 
@@ -134,6 +139,24 @@ impl Cell {
     /// covered by an image from some terminal graphics protocol (Sixel / iTerm / Kitty ...).
     pub fn set_skip(&mut self, skip: bool) -> &mut Self {
         self.skip = skip;
+        self
+    }
+
+    /// Gets the hyperlink of the cell.
+    #[must_use]
+    pub const fn hyperlink(&self) -> Option<&str> {
+        self.hyperlink
+    }
+
+    /// Sets the hyperlink of the cell.
+    pub fn set_hyperlink(&mut self, hyperlink: &'static str) -> &mut Self {
+        self.hyperlink = Some(hyperlink);
+        self
+    }
+
+    /// Clears the hyperlink of the cell.
+    pub fn clear_hyperlink(&mut self) -> &mut Self {
+        self.hyperlink = None;
         self
     }
 
@@ -182,6 +205,7 @@ mod tests {
                 underline_color: Color::Reset,
                 modifier: Modifier::empty(),
                 skip: false,
+                hyperlink: None
             }
         );
     }
@@ -244,6 +268,20 @@ mod tests {
         cell.set_skip(true);
         assert!(cell.skip);
     }
+    #[test]
+    fn set_hyperlink() {
+        let mut cell = Cell::EMPTY;
+        cell.set_hyperlink("https://example.com");
+        assert_eq!(cell.hyperlink(), Some("https://example.com"));
+    }
+
+    #[test]
+    fn clear_hyperlink() {
+        let mut cell = Cell::EMPTY;
+        cell.set_hyperlink("https://example.com");
+        cell.clear_hyperlink();
+        assert_eq!(cell.hyperlink(), None);
+    }
 
     #[test]
     fn reset() {
@@ -257,6 +295,7 @@ mod tests {
         assert_eq!(cell.fg, Color::Reset);
         assert_eq!(cell.bg, Color::Reset);
         assert!(!cell.skip);
+        assert_eq!(cell.hyperlink(), None);
     }
 
     #[test]
@@ -271,6 +310,7 @@ mod tests {
                 underline_color: Some(Color::Reset),
                 add_modifier: Modifier::empty(),
                 sub_modifier: Modifier::empty(),
+                hyperlink: None
             }
         );
     }

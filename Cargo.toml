@@ -33,7 +33,6 @@ itertools = "0.13"
 lru = "0.12.0"
 paste = "1.0.2"
 palette = { version = "0.7.6", optional = true }
-serde = { version = "1", optional = true, features = ["derive"] }
 strum = { version = "0.26.3", features = ["derive"] }
 termwiz = { version = "0.22.0", optional = true }
 time = { version = "0.3.11", optional = true, features = ["local-offset"] }
@@ -127,11 +126,6 @@ crossterm = ["dep:crossterm"]
 termion = ["dep:termion"]
 ## enables the [`TermwizBackend`](backend::TermwizBackend) backend and adds a dependency on [`termwiz`].
 termwiz = ["dep:termwiz"]
-
-#! The following optional features are available for all backends:
-## enables serialization and deserialization of style and color types using the [`serde`] crate.
-## This is useful if you want to save themes to a file.
-serde = ["dep:serde", "bitflags/serde", "compact_str/serde"]
 
 ## enables the [`border!`] macro.
 macros = []
@@ -380,7 +374,3 @@ doc-scrape-examples = true
 name = "widget_impl"
 required-features = ["crossterm", "unstable-widget-ref"]
 doc-scrape-examples = true
-
-[[test]]
-name = "state_serde"
-required-features = ["serde"]

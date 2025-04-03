@@ -112,9 +112,9 @@ impl fmt::Debug for Span<'_> {
         } else {
             write!(f, "Span::from({:?})", self.content)?;
         }
-        if self.style != Style::default() {
-            self.style.fmt_stylize(f)?;
-        }
+        // if self.style != Style::default() {
+        self.style.fmt_stylize(f)?;
+        // }
         Ok(())
     }
 }
@@ -405,7 +405,7 @@ impl<'a> std::ops::Add<Self> for Span<'a> {
     }
 }
 
-impl<'a> Styled for Span<'a> {
+impl Styled for Span<'_> {
     type Item = Self;
 
     fn style(&self) -> Style {

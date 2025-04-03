@@ -276,7 +276,7 @@ pub struct Table<'a> {
     flex: Flex,
 }
 
-impl<'a> Default for Table<'a> {
+impl Default for Table<'_> {
     fn default() -> Self {
         Self {
             rows: Vec::new(),
@@ -1055,7 +1055,7 @@ fn ensure_percentages_less_than_100(widths: &[Constraint]) {
     }
 }
 
-impl<'a> Styled for Table<'a> {
+impl Styled for Table<'_> {
     type Item = Self;
 
     fn style(&self) -> Style {

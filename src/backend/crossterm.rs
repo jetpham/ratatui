@@ -507,6 +507,8 @@ impl From<ContentStyle> for Style {
             underline_color: value.underline_color.map(Into::into),
             add_modifier: value.attributes.into(),
             sub_modifier,
+            // TODO: add support
+            hyperlink: None,
         }
     }
 }

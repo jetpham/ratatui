@@ -14,7 +14,6 @@ pub use iter::*;
 /// A simple rectangle used in the computation of the layout and to give widgets a hint about the
 /// area they are supposed to render to.
 #[derive(Debug, Default, Clone, Copy, Eq, PartialEq, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Rect {
     /// The x coordinate of the top left corner of the `Rect`.
     pub x: u16,
@@ -32,7 +31,6 @@ pub struct Rect {
 ///
 /// See [`Rect::offset`]
 #[derive(Debug, Default, Clone, Copy, Eq, PartialEq, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Offset {
     /// How much to move on the X axis
     pub x: i32,
